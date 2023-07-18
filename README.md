@@ -31,6 +31,7 @@ Configration for Flask website
 ____________
 
 1. pip install -r requirment.txt
+   
 2 .export FLASK_APP=app.py
 3. flask run
 
