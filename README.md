@@ -30,12 +30,10 @@ Indexes can be created for image,desc property of Image label
 Configration for Flask website 
 ____________
 
-1. pip install -r requirment.txt
-   
-2 .export FLASK_APP=app.py
-3. flask run
-
-4. Edit ImageSearchNeo4j.py with correct neo4j connection string 
+  1. pip install -r requirment.txt                
+ 2 .export FLASK_APP=app.py
+  3. flask run
+  4. Edit ImageSearchNeo4j.py with correct neo4j connection string 
 
 
 Bulk download and upload of images 
