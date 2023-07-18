@@ -52,7 +52,7 @@ To upload to Neo4j : ImageSearch/bulkUpload/UploadToNeo.py
 
 This will upload images to neo4j . Edit the connection string for neo4j connection 
 
-
+____________
 
 For better performance to create image vector install CUDS drivers 
 
