@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Searching Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+
+</head>
+<body>
+
+    <div class="banner">
+        <a href="/upload">Search By Image</a>
+        <a href="/searchPage">Search By Description</a>
+           <a href="/addImage">Add Image to Neo4j</a>
+    </div>
+    <h1> </h1>
+
+
+    <h2>Image Details</h2>
+    <ul>
+        <li><strong>Filename:</strong> {{ filename }}</li>
+        <li><strong>Size:</strong> {{ image_size }} bytes</li>
+        <li><strong>Resolution:</strong> {{ image_resolution }}</li>
+        <li id="VectorStatus"><strong>Vector Created:</strong> No</li>
+        <li id="ImageInDatabase" ></li>
+
+
+
+
+</ul>
+        <br>Image view </br>
+        
+
+
+</body>
+</html>

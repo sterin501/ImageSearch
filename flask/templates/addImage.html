@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Image to Neo4j</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+</head>
+<body>
+
+    <div class="banner">
+        <a href="/upload">Search By Image</a>
+        <a href="/searchPage">Search By Description</a>
+        <a href="/addImage">Add Image to Neo4j</a>
+    </div>
+
+
+
+        <h1>Add a Image to Neo4j</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <input type="text" name="desc" required placeholder="Description of the image">
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>

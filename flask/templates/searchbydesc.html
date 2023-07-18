@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search By Description</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='js/searchbydesc.js') }}"></script>
+</head>
+<body>
+
+    <div class="banner">
+        <a href="/upload">Search By Image</a>
+        <a href="/searchPage">Search By Description</a>
+           <a href="/addImage">Add Image to Neo4j</a>
+    </div>
+    <h1>Search By Description of the Image</h1>
+
+        <input id="searchInput" type="text"  placeholder="Search Image by description">
+        <button  id="searchInputButton"  >Search</button>
+        <div id="imageResult">  </div>
+
+</body>
+</html>

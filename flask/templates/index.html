@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Search for Support</title>
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+     <link rel="stylesheet" href="{{ url_for('static',filename='css/styles.css') }}">
+
+  <!--       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+         <script src=" https://code.jquery.com/jquery-3.5.1.js"></script>
+         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript" src="{{ url_for('static',filename='js/scripts.js') }}"></script>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-light bg-light static-top">
+            <div class="container">
+                <a class="navbar-brand" href="#!">Search for Support</a>
+                <img class="gb_Ba gbii" src="{{imageurl}}"
+                     alt="" aria-hidden="true" data-noaft="">
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container position-relative">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6">
+                        <div class="text-center text-white">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <input  type="search" class="form-control form-control-lg" id="word"  placeholder="word"  />
+                                        <div class="invalid-feedback text-white" data-sb-feedback="word:required">Can't do black search</div>
+
+                                    </div>
+                                    <div class="col-auto"><button class="btn btn-primary btn-lg" id="submitButton" >Search</button></div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+                  <div class="container-fluid px-4">
+                        <h1 class="mt-4">Article</h1>
+                         <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Article
+                            </div>
+                            <div class="card-body">
+                                <table id="Article" class="display">
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                  <div class="container-fluid px-4">
+                        <h1 class="mt-4">Ticket</h1>
+                         <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Tickets
+                            </div>
+                            <div class="card-body">
+                                <table id="Ticket">
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                          <div class="container-fluid px-4">
+                        <h1 class="mt-4">Trello</h1>
+                         <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Cards
+                            </div>
+                            <div class="card-body">
+                                <table id="Trello">
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                          <div class="container-fluid px-4">
+                        <h1 class="mt-4">Slack</h1>
+                         <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Messages
+                            </div>
+                            <div class="card-body">
+                                <table id="Slack">
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+        <footer class="footer bg-light">
+            <div class="container">
+
+            </div>
+        </footer>
+
+    </body>
+</html>
