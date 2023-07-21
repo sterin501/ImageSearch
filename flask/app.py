@@ -67,7 +67,7 @@ def uploaded_file(filename):
 def searchImage():
     data = request.get_json()  # Retrieve the JSON data sent from JavaScript
     print (data)
-    neo4jresult=doSearch(data['filename'])
+    neo4jresult=doSearch(data['filename'],data['algo'])
     return json.dumps(neo4jresult)
 
 @app.route('/checkForVector', methods=['POST'])                  ## Checking for vector in database

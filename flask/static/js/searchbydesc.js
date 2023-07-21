@@ -15,26 +15,14 @@ sendJson()
 }); // end of ready
 
 
-function removeImages(){
 
-
-//var imageContainers = document.getElementsByClassName("image-container");
-//for (var i = 0; i < imageContainers.length; i++) {
-//  var imageElement = imageContainers[i].querySelector("img");
-//  if (imageElement) {
-//    imageElement.empty();
-//  }
-//}
-
-
-}
 
 function sendJson()
 {
 
 var searchWord = document.getElementById("searchInput").value;
     console.log("Search word: " + searchWord);
-    Request_data={"word":document.getElementById("searchInput").value}
+    Request_data={"word":searchWord}
 
 
       fetch('/searchByDesc',{
@@ -47,12 +35,12 @@ var searchWord = document.getElementById("searchInput").value;
   .then(response => response.json())
   .then(data => {
     // Handle the API response data
-    console.log(data);
+    //console.log(data);
     $('#imageResult').empty();  // To clear the old results
 
-    $('body').append("<br> Results </br>");
+    $('body').append("<br>   Result in "+data['timerequired'] + "sec");
 
-    data.forEach(function(obj) {
+    data['neo4jresult'].forEach(function(obj) {
     imgContainer=render_image(obj.base64,obj.similarity,obj.descr);
     $('#imageResult').append(imgContainer);
                                 });

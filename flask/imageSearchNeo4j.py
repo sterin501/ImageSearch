@@ -61,27 +61,28 @@ def checkForVectorAndCreate(image_name):                  ## Create Vector for i
                  print(result.consume().counters)
     return {"status": "ok","Created":True}
 
-def doSearch(image_name):                         ## Doing Search
+def doSearch(image_name,algo):                         ## Doing Search
 
   checkForVectorAndCreate(image_name)
   print(f"searching  {image_name}")
   neo4jresult=[]
-  with driver.session() as session:
-      #result=session.run("match(a:Image) with a, gds.similarity.cosine(a.vector, $vector) as similarity return a.name as name,a.base64 as base64 order by similarity desc limit 1  ",vector=vector[0].tolist())
-      result=session.run('''CALL {
+  query='''CALL {
                    MATCH (a:SearchImage{name:$name}) RETURN a.vector as Searchvector
     }
       MATCH (a:Image)-[:Compress]-> (b) with a,b, gds.similarity.cosine(a.vector, Searchvector) as similarity 
       RETURN a.desc as desc, a.name as name, similarity as similarity,b.base64 as base64 order by similarity desc limit 5 '''
-                         ,name=image_name)
-
-
+  query=query.replace('gds.similarity.cosine',algo)
+  with driver.session() as session:
+      result=session.run(query,name=image_name)
       for kk in (result):
                print (f"name {kk['name']} {kk['similarity']}")
                string_data = kk['base64'].decode('utf-8')
                neo4jresult.append({'descr':kk['desc'],'neo4jname':kk['name'],'similarity':kk['similarity'],'base64':string_data})
 
-  return (neo4jresult)
+      result_summary = result.consume()
+      timerequired=(result_summary.result_consumed_after/1000)
+      imageResult={'neo4jresult':neo4jresult,'timerequired':timerequired}
+  return (imageResult)
 
 def addToNeo4j(filename,converted_string,desc,vector):  ## Upload with or with our vector
     if vector:
@@ -134,6 +135,9 @@ def doSearchByDesc(word):
                print (f"desc {kk['desc']} {kk['similarity']}")
                string_data = kk['base64'].decode('utf-8')
                neo4jresult.append({'descr':kk['desc'],'similarity':kk['similarity'],'base64':string_data})
+      result_summary = result.consume()
+      timerequired=(result_summary.result_consumed_after/1000)
+      imageResult={'neo4jresult':neo4jresult,'timerequired':timerequired}
 
-  return (neo4jresult)
+  return (imageResult)
 

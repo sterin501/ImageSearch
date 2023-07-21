@@ -98,7 +98,8 @@ function viewImage (filename)
   var imgContainer = $('<div>').addClass('image-container');
   var img = $('<img>').attr('src', '/view/' + filename).attr('alt', 'Image');
   imgContainer.append(img);
-  $('body').append(imgContainer);
+  //$('body').append(imgContainer);
+  $('#ImageView').append(imgContainer);
 
 }
 
@@ -108,14 +109,19 @@ function searchButton (filename)
 {
 
 
-  var button = $('<button>').text('Search Image');
-  $('body').append(button);
-  console.log(filename);
-   button.click(function() {
+
+  $('#AlgoSelect').show();
+  $('#SearchButton').show();
+  //  var button = $('<button>').text('Search Image');
+  // $('body').append(button);
+  // console.log(filename);
+   $('#SearchButton').click(function() {
+       var AlgoSelect=$("#AlgoSelect").find(":selected").val();
        var Request_data={
-       'filename':filename
+       'filename':filename,
+       'algo':AlgoSelect
        }
-          var dialog = $('<div>').text('Searching in Neo4j');
+          var dialog = $('<div>').text('Searching in Neo4j using  '+AlgoSelect);
         dialog.dialog({
             modal: true,
             title: 'Search Status',
@@ -134,10 +140,12 @@ function searchButton (filename)
   .then(data => {
     // Handle the API response data
     console.log(data);
+    $('#imageResult').empty();
     dialog.dialog('close');
-    $('body').append("<br> Results </br>");
-    data.forEach(function(obj) {
-    render_image(obj.base64,obj.similarity,obj.descr);
+    $('body').append("<br>   "+AlgoSelect + " "+data['timerequired'] + "sec");
+    data['neo4jresult'].forEach(function(obj) {
+    imgContainer=render_image(obj.base64,obj.similarity,obj.descr);
+    $('#imageResult').append(imgContainer);
 });
   })
   .catch(error => {
@@ -174,11 +182,6 @@ var base64Image = "data:image/jpg;base64,"+base64Object;  // Replace with your b
   }
 );
 
-
-
-    //img.src = base64Image;
-
-  $('body').append(imgContainer);
-
+return imgContainer;
 
 }
