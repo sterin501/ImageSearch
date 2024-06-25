@@ -29,36 +29,37 @@ def reduce_image_file_size(image, quality=10):
     # Return the compressed image object
     return compressed_image
 
-def search(image_name):
 
 
-# Load the image
-  oldimage = Image.open(folder_path+"/"+image_name)
+def createSearchVector(image_name):
+    print(f"creating vector for   {image_name}")
+    # Load the image
+    oldimage = Image.open(folder_path + "/" + image_name)
 
-# Preprocess the image
-  image = reduce_image_file_size(oldimage)
+    # Preprocess the image
+    image = reduce_image_file_size(oldimage)
 
-  image = image.convert("RGB")
-  image_array = np.array(image) / 255.0
+    image = image.convert("RGB")
+    image_array = np.array(image) / 255.0
 
-# Vectorize the image
-  model = ResNet50(weights="imagenet", include_top=False)
-  features = model.predict(np.array([image_array]))
-  vector = StandardScaler().fit_transform(features.reshape(-1, 2048))
+    # Vectorize the image
+    model = ResNet50(weights="imagenet", include_top=False)
+    features = model.predict(np.array([image_array]))
+    vector = StandardScaler().fit_transform(features.reshape(-1, 2048))
+    return  vector
 
+def search(vector,algo):
+  print(f"search using    {algo}")
 # Store the vector in Neo4j
   driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "secret123"))
-  print(f"searching  {image_name}")
   with driver.session() as session:
-      #result=session.run("match(a:Image) with a, gds.similarity.cosine(a.vector, $vector) as similarity return a.name as name,a.base64 as base64 order by similarity desc limit 1  ",vector=vector[0].tolist())
-      result=session.run("match(a:Image) with a, gds.similarity.cosine(a.vector, $vector) as similarity return a.name as name, similarity as similarity order by similarity desc limit 5 ",vector=vector[0].tolist())
-
+      result = session.run('''CALL db.index.vector.queryNodes($algo,5,$vector)
+                   YIELD node AS similarAbstract, score
+                   RETURN  similarAbstract.name as name ,score order by score desc limit 5 ''',
+                   vector=vector[0].tolist(),algo=algo)
       for kk in (result):
-               print (f"name {kk['name']} {kk['similarity']}")
+               print (f"name {kk['name']} {kk['score']}")
 
-               #return (kk['base64'])
-## MATCH (a:Image{name:'0a1141d78ef508b1.jpg'}) -[:Compress]-> (b) RETURN b;
-## MATCH (a:Image{name:'0a1141d78ef508b1.jpg'}) -[:Compress]-> (b) RETURN b;
 
 def base64Image(image_name):
   driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "secret123"))
@@ -84,14 +85,12 @@ def createImage(base64Image):
 
 
 if __name__ == '__main__':
-  base64Image('000297578acb067b.jpg')
+
   for file in files:
-    #file_extension = os.path.splitext(folder_path+"/"+file)[1]
+    file_extension = os.path.splitext(folder_path+"/"+file)[1]
     if file_extension in image_extensions:
-       base64Image=search (file)
-       if base64Image:
-           print ("ok")
-           #createImage(base64Image)
-       else:
-           print ("Empty or error in search")
-       break
+           searchVector=createSearchVector (file)
+           search(searchVector,"imageCosine")
+           search(searchVector, "imageEuclidean")
+
+

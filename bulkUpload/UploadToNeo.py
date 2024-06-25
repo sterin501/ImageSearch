@@ -78,8 +78,12 @@ def upload(image_name):
   driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "secret123"))
   print(f"uploading {image_name}")
   with driver.session() as session:
-      result=session.run(''' CREATE (I:Image {name: $name,desc:$desc, vector: $vector})-[:Original]->(:Originalbase64 {base64:$base64})
-                             CREATE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  ''',
+      result=session.run(''' CREATE (I:Image {name: $name,desc:$desc})-[:Original]->(:Originalbase64 {base64:$base64})
+                             CREATE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  
+                             WITH I 
+                             CALL db.create.setNodeVectorProperty(I, "vectorCosine", $vector)
+                             CALL db.create.setNodeVectorProperty(I, "vectorEuclidean", $vector)
+                             ''',
                              name=image_name,desc=desc,vector=vector[0].tolist(),base64=converted_string,compressed_base64_str=compressed_base64_str)
       if (result.consume().counters.contains_updates):
                  print(result.consume().counters)
