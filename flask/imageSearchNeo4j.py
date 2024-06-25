@@ -66,14 +66,23 @@ def doSearch(image_name,algo):                         ## Doing Search
   checkForVectorAndCreate(image_name)
   print(f"searching  {image_name}")
   neo4jresult=[]
-  query='''CALL {
-                   MATCH (a:SearchImage{name:$name}) RETURN a.vector as Searchvector
-    }
-      MATCH (a:Image)-[:Compress]-> (b) with a,b, gds.similarity.cosine(a.vector, Searchvector) as similarity 
-      RETURN a.desc as desc, a.name as name, similarity as similarity,b.base64 as base64 order by similarity desc limit 5 '''
-  query=query.replace('gds.similarity.cosine',algo)
+  query='''MATCH (a:SearchImage{name: $name})
+WITH a.vector as Searchvector
+CALL {
+    WITH Searchvector
+    CALL db.index.vector.queryNodes($algo, 5, Searchvector)
+    YIELD node AS similarAbstract, score
+    RETURN collect({name: similarAbstract.name, score: score,desc:similarAbstract.desc}) AS results   
+}
+UNWIND results AS result
+MATCH (i:Image {name: result.name})-[:Compress]->(b)
+RETURN b.base64  as base64 , result.name AS name, result.score AS similarity ,result.desc as desc
+ORDER BY result.score DESC
+LIMIT 5
+
+'''
   with driver.session() as session:
-      result=session.run(query,name=image_name)
+      result=session.run(query,name=image_name,algo=algo)
       for kk in (result):
                print (f"name {kk['name']} {kk['similarity']}")
                string_data = kk['base64'].decode('utf-8')
@@ -99,10 +108,12 @@ def addToNeo4j(filename,converted_string,desc,vector):  ## Upload with or with o
         vector = StandardScaler().fit_transform(features.reshape(-1, 2048))
         compressed_base64_str = base64.b64encode(output_stream.getvalue())
         with driver.session() as session:
-            result = session.run(''' MATCH (I:Image {name: $name}) SET I.vector=$vector
-                                     MERGE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})
-                                     RETURN I  ''',
-                                 name=filename, vector=vector[0].tolist(),compressed_base64_str=compressed_base64_str)
+            result = session.run(''' MERGE (I:Image {name: $name})
+                                     MERGE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  
+                             WITH I 
+                             CALL db.create.setNodeVectorProperty(I, "vectorCosine", $vector)
+                             CALL db.create.setNodeVectorProperty(I, "vectorEuclidean", $vector)
+                             ''',name=filename, vector=vector[0].tolist(),compressed_base64_str=compressed_base64_str)
             if (result.consume().counters.contains_updates):
                 print(result.consume().counters)
 
