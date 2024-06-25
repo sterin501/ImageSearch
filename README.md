@@ -4,38 +4,52 @@ This is demo to upload image and create image vector in the neo4j database .
 
 Later vector is used for image search
 
+____________
 
 Flow :
 ____________
 
 
-Images convert to vector using tensorflow and store as property in neo4j. This vector is used for gds.similarity.cosine procedure
-This will return images based on the score .
+We convert images to vectors using TensorFlow and store these vectors as properties in Neo4j.
 
-Website based on flask can be used to add images and search 
+By utilizing Neo4j's vector index feature, we can run cosine similarity algorithms on these vectors to find similarities.
+
+Additionally, a website built on Flask can be used to upload images and perform searches based on these vectors.
+
+____________
+
+
 There is different script for downloading images from internet and upload to neo4j 
 
+____________
 
 Configration in Neo4j 
 ____________
 
-Neo4j version : 5.6.0
-Install GDS : neo4j-graph-data-science-2.4.0.jar
+Neo4j version : 5.20.0
 
-Install APOC : apoc-5.6.0-core.jar,apoc-5.6.0-extended.jar
+Install APOC : apoc-5.20.0-core.jar,apoc-5.6.0-extended.jar
 
-Indexes can be created for image,desc property of Image label 
+Create vector index
 
+```
+CALL db.index.vector.createNodeIndex('imageCosine', 'Image', 'vectorCosine', 2048, 'cosine');
+```
+```
+CALL db.index.vector.createNodeIndex('imageEuclidean', 'Image', 'vectorEuclidean', 2048, 'euclidean'); // Optional 
+```
+____________
 
 Configration for Flask website 
 ____________
 
-  1. pip install -r requirment.txt                
- 2 .export FLASK_APP=app.py
-  3. flask run
-  4. Edit ImageSearchNeo4j.py with correct neo4j connection string 
+  1.  pip install -r requirment.txt
+  2.  export FLASK_APP=app.py       
+  3.  flask run
+  4.  Edit ImageSearchNeo4j.py with correct neo4j connection string 
 
 
+____________
 Bulk download and upload of images 
 ____________
 
@@ -57,4 +71,24 @@ For better performance to create image vector install CUDS drivers
 
 https://developer.nvidia.com/cuda-downloads
 
+____________
+
+Cypher to upload image vector
+
+```
+CREATE (I:Image {name: $name,desc:$desc})-[:Original]->(:Originalbase64 {base64:$base64})
+                             CREATE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  
+                             WITH I 
+                             CALL db.create.setNodeVectorProperty(I, "vectorCosine", $vector)
+```
+____________
+
+Cypher to search image vector
+
+```
+CALL db.index.vector.queryNodes('imageCosine', 5, $vector)
+             YIELD node AS similarAbstract, score
+             RETURN  similarAbstract.name,score
+```          
+                             
 
