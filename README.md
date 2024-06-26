@@ -77,9 +77,9 @@ Cypher to upload image vector
 
 ```
 CREATE (I:Image {name: $name,desc:$desc})-[:Original]->(:Originalbase64 {base64:$base64})
-                             CREATE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  
-                             WITH I 
-                             CALL db.create.setNodeVectorProperty(I, "vectorCosine", $vector)
+CREATE (I)-[:Compress]-> (:Compress{base64:$compressed_base64_str})  
+WITH I 
+CALL db.create.setNodeVectorProperty(I, "vectorCosine", $vector)
 ```
 ____________
 
@@ -87,8 +87,8 @@ Cypher to search image vector
 
 ```
 CALL db.index.vector.queryNodes('imageCosine', 5, $vector)
-             YIELD node AS similarAbstract, score
-             RETURN  similarAbstract.name,score
+YIELD node AS similarAbstract, score
+RETURN  similarAbstract.name,score
 ```          
                              
 
