@@ -28,7 +28,7 @@ ____________
 
 Neo4j version : 5.20.0
 
-Install APOC : apoc-5.20.0-core.jar,apoc-5.6.0-extended.jar
+Install APOC : apoc-5.20.0-core.jar
 
 Create vector index
 
