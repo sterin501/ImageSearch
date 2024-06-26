@@ -44,8 +44,8 @@ Configration for Flask website
 ____________
 
   1.  pip install -r requirment.txt
-  2.  export FLASK_APP=app.py       
-  3.  flask run
+  2.  export FLASK_APP=app.py  
+  3.  flask run --port 5002                  
   4.  Edit ImageSearchNeo4j.py with correct neo4j connection string 
 
 
