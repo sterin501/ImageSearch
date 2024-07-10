@@ -30,6 +30,8 @@ Neo4j version : 5.20.0
 
 Install APOC : apoc-5.20.0-core.jar
 
+
+
 Create vector index
 
 ```
@@ -46,9 +48,11 @@ ____________
   1.  pip install -r requirment.txt
   2.  export FLASK_APP=app.py  
   3.  flask run --port 5002                  
-  4.  Edit ImageSearchNeo4j.py with correct neo4j connection string 
+  4.  Edit ImageSearchNeo4j.py (line 12)  with correct neo4j connection string 
 
-
+```
+driver = GraphDatabase.driver("neo4j+s://auraID.databases.neo4j.io", auth=("neo4j", "auraIDpassword"))
+```
 ____________
 Bulk download and upload of images 
 ____________
