@@ -46,9 +46,10 @@ Configration for Flask website
 ____________
 
   1.  pip install -r requirment.txt
-  2.  export FLASK_APP=app.py  
-  3.  flask run --port 5002                  
-  4.  Edit ImageSearchNeo4j.py (line 12)  with correct neo4j connection string 
+  2.  export FLASK_APP=app.py
+  3.  Edit ImageSearchNeo4j.py (line 12)  with correct neo4j connection string 
+  4.  flask run --port 5002                  
+ 
 
 ```
 driver = GraphDatabase.driver("neo4j+s://auraID.databases.neo4j.io", auth=("neo4j", "auraIDpassword"))
